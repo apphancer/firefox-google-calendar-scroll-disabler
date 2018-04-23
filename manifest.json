@@ -1,0 +1,16 @@
+{
+    "manifest_version": 2,
+    "name": "firefox-google-calendar-scroll-disabler",
+    "description": "Disables changing of months in Google Calendar when inadvertently triggering the mouse scroll",
+    "version": "1.0",
+    "homepage_url": "https://github.com/apphancer/firefox-google-calendar-scroll-disabler",
+
+    "icons": {
+        "48": "icons/icon-48.png"
+    },
+
+    "content_scripts": [{
+        "matches": ["https://calendar.google.com/calendar/r/month/*"],
+        "js": ["content-script.js"]
+    }]
+}
