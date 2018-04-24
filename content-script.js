@@ -1,10 +1,10 @@
-var calendar_grid_selector = 'div[role="grid"]';
+var calendarGridSelector = 'div[role="grid"]';
 var body = document.querySelector('body');
-var calendar_grid = document.querySelectorAll(calendar_grid_selector);
+var calendarGrid = document.querySelectorAll(calendarGridSelector);
 
-var disable_scroll = function () {
-    for (var live_selector of document.querySelectorAll(calendar_grid_selector)) {
-        live_selector.addEventListener('DOMMouseScroll', function (e) {
+var disableScroll = function () {
+    for (var liveSelector of document.querySelectorAll(calendarGridSelector)) {
+        liveSelector.addEventListener('DOMMouseScroll', function (e) {
             if (e.target.id == 'el') return;
             e.preventDefault();
             e.stopPropagation();
@@ -12,29 +12,28 @@ var disable_scroll = function () {
     }
 };
 
-var mutation_breaks_scroll_blocker = function (mutation) {
+var mutationBreaksScrollBlocker = function (mutation) {
     if (mutation.attributeName && mutation.attributeName == 'data-viewfamily') {
         if (body.getAttribute('data-viewfamily') == 'EVENT')
             return true;
     }
 };
 
-var calendar_observer = new MutationObserver(function (mutations) {
+var calendarObserver = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
-        if (mutation_breaks_scroll_blocker(mutation)) {
-            disable_scroll();
+        if (mutationBreaksScrollBlocker(mutation)) {
+            disableScroll();
         }
     });
 });
 
-var observe_if_calendar_available = function () {
-    if (!calendar_grid) {
-        alert('calendar_grid is not yet showing');
-        window.setTimeout(observe_if_calendar_available, 500);
+var observeCalendarAvailability = function () {
+    if (!calendarGrid) {
+        window.setTimeout(observeCalendarAvailability, 500);
         return;
     }
-    calendar_observer.observe(body, {attributes: true});
+    calendarObserver.observe(body, {attributes: true});
 };
 
-disable_scroll();
-observe_if_calendar_available();
+disableScroll();
+observeCalendarAvailability();
