@@ -1,25 +1,19 @@
-var calendarGridSelector = 'div[role="grid"]';
 var body = document.querySelector('body');
-var calendarGrid = document.querySelectorAll(calendarGridSelector);
+var calendarGrid = 'div[role="grid"]';
+var calendarGridNodes = document.querySelectorAll(calendarGrid);
+var elementToCheckForChanges = document.querySelector('div[class="BXL82c"]');
 
 var disableScroll = function () {
-    for (var liveSelector of document.querySelectorAll(calendarGridSelector)) {
+    for (var liveSelector of document.querySelectorAll(calendarGrid)) {
         liveSelector.addEventListener('DOMMouseScroll', function (e) {
             if (e.target.id == 'el') return;
-            e.preventDefault();
             e.stopPropagation();
+            e.preventDefault();
         });
     }
 };
 
-var mutationBreaksScrollBlocker = function (mutation) {
-    if (mutation.attributeName && mutation.attributeName == 'data-viewfamily') {
-        if (body.getAttribute('data-viewfamily') == 'EVENT')
-            return true;
-    }
-};
-
-var calendarObserver = new MutationObserver(function (mutations) {
+var overlayObserver = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
         if (mutationBreaksScrollBlocker(mutation)) {
             disableScroll();
@@ -27,12 +21,21 @@ var calendarObserver = new MutationObserver(function (mutations) {
     });
 });
 
+var calendarObserver = new MutationObserver(function (mutations) {
+    disableScroll();
+});
+
 var observeCalendarAvailability = function () {
-    if (!calendarGrid) {
+    if (!calendarGridNodes) {
         window.setTimeout(observeCalendarAvailability, 500);
         return;
     }
-    calendarObserver.observe(body, {attributes: true});
+    overlayObserver.observe(body, {attributes: true});
+    calendarObserver.observe(elementToCheckForChanges, {childList: true});
+};
+
+var mutationBreaksScrollBlocker = function (mutation) {
+    return (mutation.attributeName && mutation.attributeName == 'data-viewfamily' && body.getAttribute('data-viewfamily') == 'EVENT');
 };
 
 disableScroll();
