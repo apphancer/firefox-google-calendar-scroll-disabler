@@ -4,8 +4,8 @@ var calendarGridNodes = document.querySelectorAll(calendarGrid);
 var elementToCheckForChanges = document.querySelector('div[class="BXL82c"]');
 
 var disableScroll = function () {
-    for (var liveSelector of document.querySelectorAll(calendarGrid)) {
-        liveSelector.addEventListener('DOMMouseScroll', function (e) {
+    for (var selector of document.querySelectorAll(calendarGrid)) {
+        selector.addEventListener('DOMMouseScroll', function (e) {
             if (e.target.id == 'el') return;
             e.stopPropagation();
             e.preventDefault();
